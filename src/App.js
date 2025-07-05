@@ -12,6 +12,13 @@ import AllCoins from './pages/AllCoins';
 import ChoosePayment from './pages/ChoosePayment';
 import Recharge from './pages/Recharge';
 import ChooseBank from './pages/ChooseBank';
+import Portfolio from './pages/Portfolio';
+import AddFunds from './pages/AddFunds';
+import Withdraw from './pages/Withdraw';
+import Send from './pages/Send';
+import Receive from './pages/Receive';
+import Orders from './pages/Orders';
+import EarnPage from './pages/EarnPage';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -94,6 +101,55 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <ChooseBank />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/portfolio" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Portfolio />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/add-funds" element={
+              <ProtectedRoute>
+                <Layout>
+                  <AddFunds />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/withdraw" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Withdraw />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/send" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Send />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/receive" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Receive />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/orders" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Orders />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/earn-page" element={
+              <ProtectedRoute>
+                <Layout>
+                  <EarnPage />
                 </Layout>
               </ProtectedRoute>
             } />

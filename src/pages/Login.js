@@ -223,17 +223,25 @@ const Login = () => {
                 </a>
               </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn-primary w-full flex justify-center items-center"
-              >
-                {loading ? (
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                ) : (
-                  'Sign In'
-                )}
-              </button>
+              <div className="flex gap-4">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="btn-primary flex-1 flex justify-center items-center"
+                >
+                  {loading ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  ) : (
+                    'Sign In'
+                  )}
+                </button>
+                <Link
+                  to="/signup"
+                  className="btn-secondary flex-1 flex justify-center items-center"
+                >
+                  Sign Up
+                </Link>
+              </div>
             </form>
 
             <div className="mt-6">
@@ -262,44 +270,6 @@ const Login = () => {
                   </svg>
                   <span className="ml-2">Twitter</span>
                 </button>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Sign Up Link */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-center"
-          >
-            <p className="text-gray-600">
-              Don't have an account?{' '}
-              <Link to="/signup" className="text-blue-600 hover:text-blue-500 font-medium">
-                Sign up for free
-              </Link>
-            </p>
-          </motion.div>
-
-          {/* Features - Only show on mobile */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="grid grid-cols-1 gap-4 mt-8 lg:hidden"
-          >
-            <div className="flex items-center p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-              <Shield className="h-8 w-8 text-green-500 mr-3" />
-              <div>
-                <h3 className="font-semibold text-gray-900">Secure Trading</h3>
-                <p className="text-sm text-gray-600">Bank-level security for your assets</p>
-              </div>
-            </div>
-            <div className="flex items-center p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-              <Zap className="h-8 w-8 text-yellow-500 mr-3" />
-              <div>
-                <h3 className="font-semibold text-gray-900">Real-time Data</h3>
-                <p className="text-sm text-gray-600">Live market prices and charts</p>
               </div>
             </div>
           </motion.div>

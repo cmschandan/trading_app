@@ -17,7 +17,10 @@ import {
   ChevronRight,
   Home,
   Wallet,
-  BarChart3
+  BarChart3,
+  FileText,
+  CreditCard,
+  Banknote
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { Line } from 'react-chartjs-2';
@@ -56,6 +59,7 @@ const Dashboard = () => {
   const [listingSlide, setListingSlide] = useState(0);
   const [visibleListings, setVisibleListings] = useState(2);
   const [listingScrollStep, setListingScrollStep] = useState(1);
+  const [dashboardSlide, setDashboardSlide] = useState(0);
 
   const navigate = useNavigate();
 
@@ -176,10 +180,10 @@ const Dashboard = () => {
   }
 
   const quickActions = [
-    { name: 'Add Money', icon: Plus, color: 'bg-green-500' },
     { name: 'Send', icon: Send, color: 'bg-blue-500' },
     { name: 'Receive', icon: Download, color: 'bg-purple-500' },
-    { name: 'Earn', icon: TrendingUp, color: 'bg-yellow-500' }
+    { name: 'Earn', icon: TrendingUp, color: 'bg-yellow-500' },
+    { name: 'Orders', icon: FileText, color: 'bg-gray-500' },
   ];
 
   // Auto-slide effect for monthly stats
@@ -269,6 +273,47 @@ const Dashboard = () => {
   const handlePrevListing = () => setListingSlide((prev) => Math.max(0, prev - listingScrollStep));
   const handleNextListing = () => setListingSlide((prev) => Math.min(maxListingSlide, prev + listingScrollStep));
 
+  const dashboardSliderImages = [
+    {
+      id: 1,
+      image: 'https://images.unsplash.com/photo-1518544801345-bc2b7b6b6b8a?auto=format&fit=crop&w=800&q=80',
+      title: 'Trade Anytime',
+      description: 'Access the markets 24/7 from anywhere.'
+    },
+    {
+      id: 2,
+      image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+      title: 'Advanced Analytics',
+      description: 'Powerful tools for smart trading decisions.'
+    },
+    {
+      id: 3,
+      image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80',
+      title: 'Secure Transactions',
+      description: 'Your assets are protected with top security.'
+    },
+    {
+      id: 4,
+      image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80',
+      title: 'Real-Time Data',
+      description: 'Stay updated with live market prices.'
+    }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDashboardSlide((prev) => (prev + 1) % dashboardSliderImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [dashboardSliderImages.length]);
+
+  const nextDashboardSlide = () => {
+    setDashboardSlide((prev) => (prev + 1) % dashboardSliderImages.length);
+  };
+  const prevDashboardSlide = () => {
+    setDashboardSlide((prev) => (prev - 1 + dashboardSliderImages.length) % dashboardSliderImages.length);
+  };
+
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
@@ -326,73 +371,49 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Monthly Stats Slider */}
-            <div className="mb-6 relative">
-              <div className="relative h-20 overflow-hidden rounded-lg bg-white bg-opacity-10">
-                {monthlyStats.map((stat, index) => {
-                  const Icon = stat.icon;
-                  return (
-                    <div
-                      key={stat.id}
-                      className={`absolute inset-0 flex items-center justify-between p-4 transition-opacity duration-500 ${
-                        index === currentSlide ? 'opacity-100' : 'opacity-0'
-                      }`}
-                    >
-                      <div className="flex items-center">
-                        <div className={`h-10 w-10 ${stat.color} rounded-lg flex items-center justify-center mr-3`}>
-                          <Icon className="h-5 w-5 text-white" />
-                        </div>
-                        <div>
-                          <p className="text-sm text-blue-100">{stat.title}</p>
-                          <p className="text-lg font-semibold">{stat.amount}</p>
-                        </div>
-                      </div>
-                      <div className={`text-sm font-medium ${
-                        stat.changeType === 'positive' ? 'text-green-300' : 'text-red-300'
-                      }`}>
-                        {stat.change}
-                      </div>
+            {/* Monthly Stats - side by side cards */}
+            <div className="mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {monthlyStats.map((stat) => {
+                const Icon = stat.icon;
+                return (
+                  <div key={stat.id} className="flex items-center p-4 rounded-lg bg-white bg-opacity-10">
+                    <div className={`h-10 w-10 ${stat.color} rounded-lg flex items-center justify-center mr-3`}>
+                      <Icon className="h-5 w-5 text-white" />
                     </div>
-                  );
-                })}
-              </div>
-              
-              {/* Slider Controls */}
-              <button
-                onClick={prevSlide}
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-1 rounded-full transition-all duration-200"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button
-                onClick={nextSlide}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-1 rounded-full transition-all duration-200"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-              
-              {/* Slider Indicators */}
-              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                {monthlyStats.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                      index === currentSlide ? 'bg-white' : 'bg-white bg-opacity-50'
-                    }`}
-                  />
-                ))}
-              </div>
+                    <div>
+                      <p className="text-sm text-blue-100">{stat.title}</p>
+                      <p className="text-lg font-semibold">{stat.amount}</p>
+                      <span className={`text-xs font-medium ${stat.changeType === 'positive' ? 'text-green-300' : 'text-red-300'}`}>{stat.change}</span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
-            {/* Quick Actions */}
+            {/* Add Money and Withdraw Buttons */}
+            <div className="flex gap-4 mb-4">
+              <button className="flex-1 py-3 rounded-lg bg-green-500 hover:bg-green-600 text-white font-bold text-lg flex items-center justify-center shadow-lg" onClick={() => navigate('/add-funds')}>
+                <Plus className="h-5 w-5 mr-2" /> Add Money
+              </button>
+              <button className="flex-1 py-3 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-bold text-lg flex items-center justify-center shadow-lg" onClick={() => navigate('/withdraw')}>
+                <Download className="h-5 w-5 mr-2" /> Withdraw
+              </button>
+            </div>
+
+            {/* Quick Actions with Orders button */}
             <div className="grid grid-cols-4 gap-3">
               {quickActions.map((action) => {
                 const Icon = action.icon;
+                let route = '';
+                if (action.name === 'Send') route = '/send';
+                else if (action.name === 'Receive') route = '/receive';
+                else if (action.name === 'Earn') route = '/earn-page';
+                else if (action.name === 'Orders') route = '/orders';
                 return (
                   <button
                     key={action.name}
                     className="flex flex-col items-center p-3 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors duration-200"
+                    onClick={() => route && navigate(route)}
                   >
                     <div className={`h-8 w-8 ${action.color} rounded-lg flex items-center justify-center mb-2`}>
                       <Icon className="h-4 w-4 text-white" />
@@ -467,6 +488,57 @@ const Dashboard = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Dashboard Image Slider - unique section above the table, always visible and not overlapping */}
+      <div className="w-full max-w-3xl mx-auto my-8">
+        <div className="relative h-56 md:h-72">
+          {dashboardSliderImages.map((slide, index) => (
+            <div
+              key={slide.id}
+              className={`absolute inset-0 transition-opacity duration-1000 flex flex-col items-center justify-center ${
+                index === dashboardSlide ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+              }`}
+              style={{ position: 'absolute' }}
+            >
+              <img
+                src={slide.image}
+                alt={slide.title}
+                className="w-full h-56 md:h-72 object-cover rounded-xl shadow-lg"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-30 rounded-xl"></div>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 drop-shadow-lg">{slide.title}</h2>
+                <p className="text-base md:text-lg text-white opacity-90 drop-shadow-lg">{slide.description}</p>
+              </div>
+            </div>
+          ))}
+          {/* Slider Controls */}
+          <button
+            onClick={prevDashboardSlide}
+            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all duration-200 z-20"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <button
+            onClick={nextDashboardSlide}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white p-2 rounded-full transition-all duration-200 z-20"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+          {/* Slider Indicators */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+            {dashboardSliderImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setDashboardSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                  index === dashboardSlide ? 'bg-white' : 'bg-white bg-opacity-50'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Market Table with Filters */}
